@@ -9,7 +9,7 @@ import os
 print("Loading Faster-Whisper model...")
 
 model = WhisperModel(
-    "base",
+    "small",
     device="cpu",
     compute_type="int8"
 )
@@ -18,7 +18,7 @@ print("Model loaded successfully!")
 
 # Audio settings
 SAMPLE_RATE = 16000
-DURATION = 5  # Recording duration in seconds
+DURATION = 15  # Recording duration in seconds
 
 # Record audio
 print("\nSpeak something into your microphone!")
@@ -48,7 +48,14 @@ print("Audio saved successfully!")
 # Speech to Text
 print("\nConverting speech into text...")
 
-segments, info = model.transcribe(audio_file)
+segments, info = model.transcribe(
+    audio_file,
+    beam_size=5,
+    language=None,
+    vad_filter=True,
+    condition_on_previous_text=False,
+    initial_prompt="This is an Indian speaker using Hindi and English mixed together (Hinglish). Technical words include Python, Artificial Intelligence, Voice Assistant, FastAPI and Machine Learning."
+)
 
 print("\nDetected Language:", info.language)
 print("Language Probability:", info.language_probability)
